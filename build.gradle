@@ -1,0 +1,80 @@
+repositories {
+
+    repositories {
+        maven {
+           url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+buildscript {
+    ext { springBootVersion = '2.1.12.RELEASE' }
+
+    repositories {
+
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE"
+        classpath("io.franzbecker:gradle-lombok:4.0.0")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.franzbecker.gradle-lombok'
+
+sourceCompatibility = 1.8
+
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.boot:spring-boot-dependencies:${rootProject.springBootVersion}")
+    }
+}
+
+ext['spring.version'] = '5.1.18.RELEASE'
+ext['jackson.version'] = '2.10.3'
+ext['tomcat.version'] = '9.0.37'
+ext['spring-security.version'] = '5.1.10.RELEASE'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+    implementation 'commons-lang:commons-lang:2.6'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+    implementation 'com.google.guava:guava:28.1-jre'
+
+    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+
+    implementation 'org.apache.logging.log4j:log4j-to-slf4j:2.13.2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.13.2'
+
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+
+    testImplementation 'com.h2database:h2:1.4.197'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.spockframework:spock-spring:1.1-groovy-2.4'
+    testImplementation 'org.codehaus.groovy:groovy'
+}
+
+
+bootRun {
+    systemProperties System.properties
+}
+
+bootJar {
+    mainClassName='com.test.helloworld.HelloWorldApplication'
+}
